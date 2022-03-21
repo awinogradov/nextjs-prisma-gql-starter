@@ -6,7 +6,14 @@ import {
 } from '@genql/runtime'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 export * from './schema'
-import { QueryRequest, QueryPromiseChain, Query } from './schema'
+import {
+  QueryRequest,
+  QueryPromiseChain,
+  Query,
+  MutationRequest,
+  MutationPromiseChain,
+  Mutation,
+} from './schema'
 export declare const createClient: (options?: ClientOptions) => Client
 export declare const everything: { __scalar: boolean }
 export declare const version: string
@@ -18,8 +25,14 @@ export interface Client {
     request: R & { __name?: string },
   ): Promise<FieldsSelection<Query, R>>
 
+  mutation<R extends MutationRequest>(
+    request: R & { __name?: string },
+  ): Promise<FieldsSelection<Mutation, R>>
+
   chain: {
     query: QueryPromiseChain
+
+    mutation: MutationPromiseChain
   }
 }
 
@@ -31,6 +44,19 @@ export type QueryResult<fields extends QueryRequest> = FieldsSelection<
 export declare const generateQueryOp: (
   fields: QueryRequest & { __name?: string },
 ) => GraphqlOperation
+export type MutationResult<fields extends MutationRequest> = FieldsSelection<
+  Mutation,
+  fields
+>
+
+export declare const generateMutationOp: (
+  fields: MutationRequest & { __name?: string },
+) => GraphqlOperation
+
+export declare const enumRole: {
+  readonly ADMIN: 'ADMIN'
+  readonly USER: 'USER'
+}
 
 export declare const enumSortOrder: {
   readonly asc: 'asc'

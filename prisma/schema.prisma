@@ -56,6 +56,8 @@ model User {
   role          Role      @default(USER)
   created_at    DateTime  @default(now())
   updated_at    DateTime  @default(now()) @updatedAt
+
+  posts Post[]
 }
 
 model VerificationToken {
@@ -64,4 +66,16 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  author    User     @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  author_id  String
+
+  @@index([author_id])
 }

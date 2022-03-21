@@ -32,6 +32,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  Role: "ADMIN" | "USER"
   SortOrder: "asc" | "desc"
 }
 
@@ -45,6 +46,16 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Mutation: {};
+  Post: { // root type
+    author?: NexusGenRootTypes['User'] | null; // User
+    author_id?: string | null; // String
+    content: string; // String!
+    created_at?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: number; // Int!
+    title: string; // String!
+    updated_at?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   Query: {};
   User: { // root type
     created_at?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -52,6 +63,8 @@ export interface NexusGenObjects {
     id: string; // String!
     image?: string | null; // String
     name?: string | null; // String
+    posts?: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+    role?: NexusGenEnums['Role'] | null; // Role
     updated_at?: NexusGenScalars['DateTime'] | null; // DateTime
   }
 }
@@ -67,7 +80,20 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Mutation: { // field return type
+    createPost: NexusGenRootTypes['Post'] | null; // Post
+  }
+  Post: { // field return type
+    author: NexusGenRootTypes['User'] | null; // User
+    author_id: string | null; // String
+    content: string; // String!
+    created_at: NexusGenScalars['DateTime'] | null; // DateTime
+    id: number; // Int!
+    title: string; // String!
+    updated_at: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   Query: { // field return type
+    posts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
   User: { // field return type
@@ -76,12 +102,27 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     image: string | null; // String
     name: string | null; // String
+    posts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+    role: NexusGenEnums['Role'] | null; // Role
     updated_at: NexusGenScalars['DateTime'] | null; // DateTime
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Mutation: { // field return type name
+    createPost: 'Post'
+  }
+  Post: { // field return type name
+    author: 'User'
+    author_id: 'String'
+    content: 'String'
+    created_at: 'DateTime'
+    id: 'Int'
+    title: 'String'
+    updated_at: 'DateTime'
+  }
   Query: { // field return type name
+    posts: 'Post'
     users: 'User'
   }
   User: { // field return type name
@@ -90,12 +131,23 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     image: 'String'
     name: 'String'
+    posts: 'Post'
+    role: 'Role'
     updated_at: 'DateTime'
   }
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    createPost: { // args
+      content: string; // String!
+      title: string; // String!
+    }
+  }
   Query: {
+    posts: { // args
+      sortBy?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    }
     users: { // args
       sortBy?: NexusGenEnums['SortOrder'] | null; // SortOrder
     }

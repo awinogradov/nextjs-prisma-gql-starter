@@ -25,6 +25,11 @@ module.exports.createClient = function(options) {
   return createClientOriginal(optionsCopy)
 }
 
+module.exports.enumRole = {
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+}
+
 module.exports.enumSortOrder = {
   asc: 'asc',
   desc: 'desc',

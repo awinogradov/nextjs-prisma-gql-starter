@@ -7,8 +7,28 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type Mutation {
+  createPost(content: String!, title: String!): Post
+}
+
+type Post {
+  author: User
+  author_id: String
+  content: String!
+  created_at: DateTime
+  id: Int!
+  title: String!
+  updated_at: DateTime
+}
+
 type Query {
+  posts(sortBy: SortOrder): [Post]
   users(sortBy: SortOrder): [User]
+}
+
+enum Role {
+  ADMIN
+  USER
 }
 
 enum SortOrder {
@@ -22,5 +42,7 @@ type User {
   id: String!
   image: String
   name: String
+  posts: [Post]
+  role: Role
   updated_at: DateTime
 }

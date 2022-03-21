@@ -16,6 +16,10 @@ const Home: NextPage = () => {
                 email: true,
                 image: true,
                 created_at: true,
+                posts: {
+                    id: true,
+                    title: true,
+                }
             },
         });
 
