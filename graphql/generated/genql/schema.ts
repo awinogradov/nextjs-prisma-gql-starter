@@ -24,6 +24,7 @@ export interface Post {
 }
 
 export interface Query {
+    post?: Post
     posts?: (Post | undefined)[]
     users?: (User | undefined)[]
     __typename: 'Query'
@@ -46,7 +47,7 @@ export interface User {
 }
 
 export interface MutationRequest{
-    createPost?: [{content: Scalars['String'],title: Scalars['String']},PostRequest]
+    createPost?: [{content: Scalars['String'],title: Scalars['String'],user: UserSession},PostRequest]
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -64,7 +65,8 @@ export interface PostRequest{
 }
 
 export interface QueryRequest{
-    posts?: [{sortBy?: (SortOrder | null)},PostRequest] | PostRequest
+    post?: [{id: Scalars['String'],user: UserSession},PostRequest]
+    posts?: [{sortBy?: (SortOrder | null),user: UserSession},PostRequest]
     users?: [{sortBy?: (SortOrder | null)},UserRequest] | UserRequest
     __typename?: boolean | number
     __scalar?: boolean | number
@@ -82,6 +84,8 @@ export interface UserRequest{
     __typename?: boolean | number
     __scalar?: boolean | number
 }
+
+export interface UserSession {email: Scalars['String'],id: Scalars['String'],image?: (Scalars['String'] | null),name?: (Scalars['String'] | null),role?: (Role | null)}
 
 
 const Mutation_possibleTypes = ['Mutation']
@@ -116,11 +120,11 @@ export const isUser = (obj?: { __typename?: any } | null): obj is User => {
 
 
 export interface MutationPromiseChain{
-    createPost: ((args: {content: Scalars['String'],title: Scalars['String']}) => PostPromiseChain & {get: <R extends PostRequest>(request: R, defaultValue?: (FieldsSelection<Post, R> | undefined)) => Promise<(FieldsSelection<Post, R> | undefined)>})
+    createPost: ((args: {content: Scalars['String'],title: Scalars['String'],user: UserSession}) => PostPromiseChain & {get: <R extends PostRequest>(request: R, defaultValue?: (FieldsSelection<Post, R> | undefined)) => Promise<(FieldsSelection<Post, R> | undefined)>})
 }
 
 export interface MutationObservableChain{
-    createPost: ((args: {content: Scalars['String'],title: Scalars['String']}) => PostObservableChain & {get: <R extends PostRequest>(request: R, defaultValue?: (FieldsSelection<Post, R> | undefined)) => Observable<(FieldsSelection<Post, R> | undefined)>})
+    createPost: ((args: {content: Scalars['String'],title: Scalars['String'],user: UserSession}) => PostObservableChain & {get: <R extends PostRequest>(request: R, defaultValue?: (FieldsSelection<Post, R> | undefined)) => Observable<(FieldsSelection<Post, R> | undefined)>})
 }
 
 export interface PostPromiseChain{
@@ -144,12 +148,14 @@ export interface PostObservableChain{
 }
 
 export interface QueryPromiseChain{
-    posts: ((args?: {sortBy?: (SortOrder | null)}) => {get: <R extends PostRequest>(request: R, defaultValue?: ((FieldsSelection<Post, R> | undefined)[] | undefined)) => Promise<((FieldsSelection<Post, R> | undefined)[] | undefined)>})&({get: <R extends PostRequest>(request: R, defaultValue?: ((FieldsSelection<Post, R> | undefined)[] | undefined)) => Promise<((FieldsSelection<Post, R> | undefined)[] | undefined)>}),
+    post: ((args: {id: Scalars['String'],user: UserSession}) => PostPromiseChain & {get: <R extends PostRequest>(request: R, defaultValue?: (FieldsSelection<Post, R> | undefined)) => Promise<(FieldsSelection<Post, R> | undefined)>}),
+    posts: ((args: {sortBy?: (SortOrder | null),user: UserSession}) => {get: <R extends PostRequest>(request: R, defaultValue?: ((FieldsSelection<Post, R> | undefined)[] | undefined)) => Promise<((FieldsSelection<Post, R> | undefined)[] | undefined)>}),
     users: ((args?: {sortBy?: (SortOrder | null)}) => {get: <R extends UserRequest>(request: R, defaultValue?: ((FieldsSelection<User, R> | undefined)[] | undefined)) => Promise<((FieldsSelection<User, R> | undefined)[] | undefined)>})&({get: <R extends UserRequest>(request: R, defaultValue?: ((FieldsSelection<User, R> | undefined)[] | undefined)) => Promise<((FieldsSelection<User, R> | undefined)[] | undefined)>})
 }
 
 export interface QueryObservableChain{
-    posts: ((args?: {sortBy?: (SortOrder | null)}) => {get: <R extends PostRequest>(request: R, defaultValue?: ((FieldsSelection<Post, R> | undefined)[] | undefined)) => Observable<((FieldsSelection<Post, R> | undefined)[] | undefined)>})&({get: <R extends PostRequest>(request: R, defaultValue?: ((FieldsSelection<Post, R> | undefined)[] | undefined)) => Observable<((FieldsSelection<Post, R> | undefined)[] | undefined)>}),
+    post: ((args: {id: Scalars['String'],user: UserSession}) => PostObservableChain & {get: <R extends PostRequest>(request: R, defaultValue?: (FieldsSelection<Post, R> | undefined)) => Observable<(FieldsSelection<Post, R> | undefined)>}),
+    posts: ((args: {sortBy?: (SortOrder | null),user: UserSession}) => {get: <R extends PostRequest>(request: R, defaultValue?: ((FieldsSelection<Post, R> | undefined)[] | undefined)) => Observable<((FieldsSelection<Post, R> | undefined)[] | undefined)>}),
     users: ((args?: {sortBy?: (SortOrder | null)}) => {get: <R extends UserRequest>(request: R, defaultValue?: ((FieldsSelection<User, R> | undefined)[] | undefined)) => Observable<((FieldsSelection<User, R> | undefined)[] | undefined)>})&({get: <R extends UserRequest>(request: R, defaultValue?: ((FieldsSelection<User, R> | undefined)[] | undefined)) => Observable<((FieldsSelection<User, R> | undefined)[] | undefined)>})
 }
 

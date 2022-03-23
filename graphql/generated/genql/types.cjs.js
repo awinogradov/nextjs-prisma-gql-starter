@@ -5,7 +5,7 @@ module.exports = {
         4,
         6,
         7,
-        9
+        10
     ],
     "types": {
         "DateTime": {},
@@ -20,6 +20,10 @@ module.exports = {
                     "title": [
                         2,
                         "String!"
+                    ],
+                    "user": [
+                        9,
+                        "UserSession!"
                     ]
                 }
             ],
@@ -56,11 +60,28 @@ module.exports = {
         },
         "Int": {},
         "Query": {
+            "post": [
+                3,
+                {
+                    "id": [
+                        2,
+                        "String!"
+                    ],
+                    "user": [
+                        9,
+                        "UserSession!"
+                    ]
+                }
+            ],
             "posts": [
                 3,
                 {
                     "sortBy": [
                         7
+                    ],
+                    "user": [
+                        9,
+                        "UserSession!"
                     ]
                 }
             ],
@@ -102,6 +123,26 @@ module.exports = {
             ],
             "updated_at": [
                 0
+            ],
+            "__typename": [
+                2
+            ]
+        },
+        "UserSession": {
+            "email": [
+                2
+            ],
+            "id": [
+                2
+            ],
+            "image": [
+                2
+            ],
+            "name": [
+                2
+            ],
+            "role": [
+                6
             ],
             "__typename": [
                 2

@@ -3,27 +3,26 @@ import Head from 'next/head';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import useSWR from 'swr';
 
-import { gql } from '../utils/gql';
+import { createFetcher } from '../utils/createFetcher';
+
+const fetcher = createFetcher(() => ({
+    users: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        created_at: true,
+        posts: {
+            id: true,
+            title: true,
+        }
+    },
+}))
 
 const Home: NextPage = () => {
     const { data: session } = useSession();
 
-    const fetcher = () =>
-        gql.query({
-            users: {
-                id: true,
-                name: true,
-                email: true,
-                image: true,
-                created_at: true,
-                posts: {
-                    id: true,
-                    title: true,
-                }
-            },
-        });
-
-    const { data, error } = useSWR('users', fetcher);
+    const { data, error } = useSWR('users', fetcher());
 
     return (
         <>

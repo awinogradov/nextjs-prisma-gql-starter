@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 import { gql } from '../../utils/gql';
 
 function Page() {
     const router = useRouter();
+    const { data: session } = useSession();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -16,6 +18,7 @@ function Page() {
             .mutation({
                 createPost: [
                     {
+                        user: session!.user,
                         title,
                         content,
                     },
@@ -24,7 +27,8 @@ function Page() {
                     },
                 ],
             })
-            .then((response) => {
+            .then((res) => {
+                console.log(`Post ${res.createPost?.id} created`);
                 router.push('/');
             })
             .catch((error) => console.log(error.message));

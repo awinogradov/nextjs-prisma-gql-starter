@@ -29,6 +29,13 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  UserSession: { // input type
+    email: string; // String!
+    id: string; // String!
+    image?: string | null; // String
+    name?: string | null; // String
+    role?: NexusGenEnums['Role'] | null; // Role
+  }
 }
 
 export interface NexusGenEnums {
@@ -93,6 +100,7 @@ export interface NexusGenFieldTypes {
     updated_at: NexusGenScalars['DateTime'] | null; // DateTime
   }
   Query: { // field return type
+    post: NexusGenRootTypes['Post'] | null; // Post
     posts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
@@ -122,6 +130,7 @@ export interface NexusGenFieldTypeNames {
     updated_at: 'DateTime'
   }
   Query: { // field return type name
+    post: 'Post'
     posts: 'Post'
     users: 'User'
   }
@@ -142,11 +151,17 @@ export interface NexusGenArgTypes {
     createPost: { // args
       content: string; // String!
       title: string; // String!
+      user: NexusGenInputs['UserSession']; // UserSession!
     }
   }
   Query: {
+    post: { // args
+      id: string; // String!
+      user: NexusGenInputs['UserSession']; // UserSession!
+    }
     posts: { // args
       sortBy?: NexusGenEnums['SortOrder'] | null; // SortOrder
+      user: NexusGenInputs['UserSession']; // UserSession!
     }
     users: { // args
       sortBy?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -162,7 +177,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 

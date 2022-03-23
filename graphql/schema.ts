@@ -4,6 +4,7 @@ import {
     mutationType,
     asNexusMethod,
     objectType,
+    inputObjectType,
     enumType,
     arg,
     nonNull,
@@ -21,6 +22,17 @@ const SortOrder = enumType({
 const Role = enumType({
     name: 'Role',
     members: ['USER', 'ADMIN'],
+});
+
+const UserSession = inputObjectType({
+    name: 'UserSession',
+    definition(t) {
+        t.nonNull.string('id');
+        t.nonNull.string('email');
+        t.string('name');
+        t.string('image');
+        t.field('role', { type: 'Role' });
+    },
 });
 
 const User = objectType({
@@ -61,25 +73,46 @@ const Query = queryType({
                 db.user.findMany({
                     orderBy: { created_at: sortBy || undefined },
                     include: {
-                        posts: true
-                    }
+                        posts: true,
+                    },
                 }),
         });
 
         t.list.field('posts', {
             type: 'Post',
             args: {
+                user: nonNull(arg({ type: 'UserSession' })),
                 sortBy: arg({ type: 'SortOrder' }),
             },
-            resolve: async (_, { sortBy }, { db, req }) => {
-                const user = await db.user.findUnique({ where: { id: req.session.user.id }});
+            resolve: async (_, { sortBy, user }, { db }) => {
+                const validUser = await db.user.findUnique({ where: { id: user.id } });
 
-                if (!user) return null;
+                if (!validUser) return null;
 
                 return db.post.findMany({
-                    where: { author_id: user.id },
+                    where: { author_id: validUser.id },
                     orderBy: { created_at: sortBy || undefined },
-                })
+                });
+            },
+        });
+
+        t.field('post', {
+            type: 'Post',
+            args: {
+                id: nonNull(stringArg()),
+                user: nonNull(arg({ type: 'UserSession' })),
+            },
+            resolve: async (_, { id, user }, { db }) => {
+                const validUser = await db.user.findUnique({ where: { id: user.id } });
+
+                if (!validUser) return null;
+
+                return db.post.findUnique({
+                    where: { id: parseInt(id) },
+                    include: {
+                        author: true,
+                    },
+                });
             },
         });
     },
@@ -92,18 +125,19 @@ const Mutation = mutationType({
             args: {
                 title: nonNull(stringArg()),
                 content: nonNull(stringArg()),
+                user: nonNull(arg({ type: 'UserSession' })),
             },
-            resolve: async (_, { title, content }, { db, req }) => {
-                const user = await db.user.findUnique({ where: { id: req.session.user.id }});
+            resolve: async (_, { user, title, content }, { db }) => {
+                const validUser = await db.user.findUnique({ where: { id: user.id } });
 
-                if (!user) return null;
+                if (!validUser) return null;
 
                 try {
                     return db.post.create({
                         data: {
                             title,
                             content,
-                            author_id: user.id,
+                            author_id: validUser.id,
                         },
                     });
                 } catch (error) {
@@ -115,7 +149,7 @@ const Mutation = mutationType({
 });
 
 export const schema = makeSchema({
-    types: [Query, Mutation, DateTime, SortOrder, Role, User, Post],
+    types: [Query, Mutation, DateTime, SortOrder, Role, User, UserSession, Post],
     outputs: {
         schema: join(process.cwd(), 'graphql/schema.graphql'),
         typegen: join(process.cwd(), 'graphql/generated/nexus.d.ts'),
