@@ -14,6 +14,8 @@ import {
 import { DateTimeResolver } from 'graphql-scalars';
 import { join } from 'path';
 
+import { mailServer } from '../src/utils/mailServer';
+
 const DateTime = asNexusMethod(DateTimeResolver, 'DateTime');
 const SortOrder = enumType({
     name: 'SortOrder',
@@ -133,13 +135,23 @@ const Mutation = mutationType({
                 if (!validUser) return null;
 
                 try {
-                    return db.post.create({
+                    const newPost = db.post.create({
                         data: {
                             title,
                             content,
                             author_id: validUser.id,
                         },
                     });
+
+                    await mailServer.sendMail({
+                        from: '"Fred Foo 👻" <foo@example.com>',
+                        to: 'bar@example.com, baz@example.com',
+                        subject: 'Hello ✔',
+                        text: `new post '${title}'`,
+                        html: `new post <b>${title}</b>`,
+                    });
+
+                    return newPost;
                 } catch (error) {
                     throw Error(`${error}`);
                 }
