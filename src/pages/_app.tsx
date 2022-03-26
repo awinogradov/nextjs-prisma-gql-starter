@@ -5,6 +5,7 @@ import { SessionProvider, useSession, signIn } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
+import tinykeys from 'tinykeys';
 
 import { Theme } from '../components/Theme';
 import { apolloClient } from '../utils/apolloClient';
@@ -31,6 +32,18 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
 
 const Root = ({ Component, pageProps }: { Component: NextPageWithAuthAuth; pageProps: any }) => {
     const { theme } = useTheme();
+
+    useEffect(() => {
+        const unsubscribe = tinykeys(window, {
+            'c g': () => {
+                alert("The keys 'c' and 'g' were pressed in order");
+            },
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    });
 
     return (
         <>
