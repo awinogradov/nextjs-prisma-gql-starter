@@ -4,6 +4,7 @@ import { ApolloProvider } from '@apollo/client';
 import { SessionProvider, useSession, signIn } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 import { useTheme } from 'next-themes';
+import { Toaster } from 'react-hot-toast';
 
 import { Theme } from '../components/Theme';
 import { apolloClient } from '../utils/apolloClient';
@@ -34,6 +35,15 @@ const Root = ({ Component, pageProps }: { Component: NextPageWithAuthAuth; pageP
     return (
         <>
             <Theme theme={theme || 'dark'} />
+
+            <Toaster
+                toastOptions={
+                    {
+                        // style: { borderRadius: '6px', background: notificationBackground, color: notificationColor },
+                    }
+                }
+                position="bottom-right"
+            />
 
             <ThemeChanger />
 
