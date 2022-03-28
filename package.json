@@ -11,7 +11,9 @@
     "generate:themes": "nodemon --exec 'node ./scripts/themes.js' --watch 'src/design/themes/*.js'",
     "generate:nexus": "nodemon --exec 'ts-node --transpile-only -P nexus.tsconfig.json src/pages/api/graphql' --ext 'ts' --watch '*/graphql/**/*.ts'",
     "generate:genql": "nodemon --exec 'genql --schema ./graphql/schema.graphql --output ./graphql/generated/genql'  --watch 'graphql/schema.graphql'",
-    "generate": "concurrently \"npm run generate:nexus\" \"npm run generate:genql\" \"npm run generate:themes\""
+    "generate": "concurrently \"npm run generate:nexus\" \"npm run generate:genql\" \"npm run generate:themes\"",
+    "db:run": "docker-compose up -d",
+    "db:down": "docker-compose down"
   },
   "dependencies": {
     "@apollo/client": "3.5.10",
