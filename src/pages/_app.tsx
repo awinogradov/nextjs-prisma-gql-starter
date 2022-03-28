@@ -31,7 +31,7 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
     return isUser ? <>{children}</> : null;
 };
 
-const Root = ({ Component, pageProps }: { Component: NextPageWithAuthAuth; pageProps: any }) => {
+const Root = ({ Component, pageProps }: { Component: NextPageWithAuth; pageProps: any }) => {
     const { theme } = useTheme();
 
     useEffect(() => {

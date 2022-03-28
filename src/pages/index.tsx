@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetStaticPropsContext } from 'next';
 import Head from 'next/head';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import useSWR from 'swr';
@@ -16,9 +16,9 @@ const fetcher = createFetcher(() => ({
         posts: {
             id: true,
             title: true,
-        }
+        },
     },
-}))
+}));
 
 const Home: NextPage = () => {
     const { data: session } = useSession();
