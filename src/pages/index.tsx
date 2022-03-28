@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import useSWR from 'swr';
+import { useTranslations } from 'next-intl';
 
 import { createFetcher } from '../utils/createFetcher';
 
@@ -21,8 +22,8 @@ const fetcher = createFetcher(() => ({
 
 const Home: NextPage = () => {
     const { data: session } = useSession();
-
     const { data, error } = useSWR('users', fetcher());
+    const t = useTranslations('index');
 
     return (
         <>
@@ -35,7 +36,7 @@ const Home: NextPage = () => {
 
             {session ? (
                 <>
-                    Signed in as {session!.user?.email} <br />
+                    {t('signed in as')} {session!.user?.email} <br />
                     <button onClick={() => signOut()}>Sign out</button>
                     {session.user.role === 'ADMIN' && (
                         <div>
@@ -54,3 +55,11 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export async function getStaticProps({ locale }: GetStaticPropsContext) {
+    return {
+        props: {
+            i18n: (await import(`../../i18n/${locale}.json`)).default,
+        },
+    };
+}

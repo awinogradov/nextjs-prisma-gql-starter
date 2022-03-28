@@ -6,15 +6,16 @@ import { ThemeProvider } from 'next-themes';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
 import tinykeys from 'tinykeys';
+import { NextIntlProvider } from 'next-intl';
 
 import { Theme } from '../components/Theme';
 import { apolloClient } from '../utils/apolloClient';
 import { GlobalStyle } from '../components/GlobalStyle';
 import { ThemeChanger } from '../components/ThemeChanger';
-import { NextPageWithAuthAuth } from '../types/nextPageWithAuth';
+import { NextPageWithAuth } from '../types/nextPageWithAuth';
 
 type AppPropsWithAuth = AppProps & {
-    Component: NextPageWithAuthAuth;
+    Component: NextPageWithAuth;
 };
 
 const Auth = ({ children }: { children: React.ReactNode }) => {
@@ -78,9 +79,11 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppPropsWithAu
 
             <SessionProvider session={session}>
                 <ApolloProvider client={apolloClient}>
-                    <ThemeProvider themes={['light', 'dark']} defaultTheme="dark">
-                        <Root Component={Component} pageProps={pageProps} />
-                    </ThemeProvider>
+                    <NextIntlProvider messages={pageProps.i18n}>
+                        <ThemeProvider themes={['light', 'dark']} defaultTheme="dark">
+                            <Root Component={Component} pageProps={pageProps} />
+                        </ThemeProvider>
+                    </NextIntlProvider>
                 </ApolloProvider>
             </SessionProvider>
         </>

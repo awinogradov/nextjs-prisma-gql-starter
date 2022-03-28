@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
 
-export type NextPageWithAuthAuth = NextPage & {
+export type NextPageWithAuth = NextPage & {
     auth?: boolean;
 };
